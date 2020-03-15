@@ -25,7 +25,7 @@ const example = {
 function App() {
   return (
     <ul>
-      <Field field={example} />
+      <Field {...example} />
     </ul>
   );
 }

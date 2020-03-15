@@ -1,35 +1,31 @@
 import React from 'react';
 
-const Field = ({ field: { type, name, default: defaultValue, fields = [] }}) => {
-  let recordName = null
+import RecordField from './Record'
 
+const getType = (type) => {
   if (typeof type === 'object') {
-    fields = type.fields || []
-    recordName = type.name
-    type = 'record'
+    return [ "record", RecordField ]
   }
 
-  const defaultComponent = defaultValue ? <React.Fragment>, "default": {JSON.stringify(defaultValue)}</React.Fragment> : null
-  const recordNameComponent = recordName ? <React.Fragment>, "recordName": "{recordName}"</React.Fragment> : null
+  switch (type) {
+    case 'record':
+      return [ "record", RecordField ]
+    default:
+      return [ "type", React.Fragment ]
+  }
+}
 
-  const fieldsComponent = fields.length === 0 ? <React.Fragment>&nbsp;</React.Fragment> : (
-    <React.Fragment>
-      , "fields": [
-        <ul>
-          { fields.map((field,index) => (<Field key={index} field={field} />)) }
-        </ul>
-      ]
-    </React.Fragment>
-  )
+const Field = (params) => {
+  const defaultComponent = params.default ? <React.Fragment>, "default": {JSON.stringify(params.default)}</React.Fragment> : null
+  const [type, TypeComponent] = getType(params.type)
 
   return (
     <li>
       &#123;
-        "name": "{name}",
+        "name": "{params.name}",
         "type": "{type}"
-        {recordNameComponent}
         {defaultComponent}
-        {fieldsComponent}
+        <TypeComponent {...params} />
       &#125;
     </li>
   )
