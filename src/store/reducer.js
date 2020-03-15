@@ -104,18 +104,14 @@ export const reducer = (state, action) => {
 
 // Starting value
 let initialState = {}
-let rootElement = buildTypeField('record', { name: 'userInfo' })
+let rootElement = buildTypeField('record', { name: 'event_name' })
 initialState = addField(initialState, rootElement)
-initialState = addField(initialState, { parentId: rootElement.id, name: 'username', type: 'string', default: 'NONE' })
-initialState = addField(initialState, { parentId: rootElement.id, name: "age", type: "int", default: -1 })
-initialState = addField(initialState, { parentId: rootElement.id, name: "phone", type: "string", default: "NONE" })
-initialState = addField(initialState, { parentId: rootElement.id, name: "housenum", type: "string", default: "NONE" })
-let childElement = buildTypeField('record', { parentId: rootElement.id, name: "address", default: "{}", type: "record", recordName: "address" })
-initialState = addField(initialState, childElement)
-initialState = addField(initialState, { parentId: childElement.id, name: "street", type: "string", default: "NONE" })
-initialState = addField(initialState, { parentId: childElement.id, name: "city", type: "string", default: "NONE" })
-initialState = addField(initialState, { parentId: childElement.id, name: "state_prov", type: "string", default: "NONE" })
-initialState = addField(initialState, { parentId: childElement.id, name: "country", type: "string", default: "NONE" })
-initialState = addField(initialState, { parentId: childElement.id, name: "zip", type: "string", default: "NONE" })
+initialState = addField(initialState, { parentId: rootElement.id, name: 'event_name', type: 'string', nullable: false })
+initialState = addField(initialState, { parentId: rootElement.id, name: "trace_id", type: "string", nullable: false })
+initialState = addField(initialState, { parentId: rootElement.id, name: "timestamp", type: "string", nullable: false })
+initialState = addField(initialState, { parentId: rootElement.id, name: "organization_id", type: "string", nullable: false })
+let payload = buildTypeField('record', { parentId: rootElement.id, name: "payload", default: "{}", type: "record", recordName: "payload", nullable: false })
+initialState = addField(initialState, payload)
+initialState = addField(initialState, { parentId: payload.id, name: "body", type: "string" })
 
 export { initialState }
