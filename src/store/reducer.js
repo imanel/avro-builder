@@ -1,4 +1,8 @@
-import { CHANGE_NAME, CHANGE_TYPE } from './types'
+import {
+  CHANGE_DEFAULT_VALUE,
+  CHANGE_NAME,
+  CHANGE_TYPE,
+} from './types'
 
 const uuidv4 = () => {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -16,7 +20,7 @@ const buildTypeField = (type, props) => {
   }
 
   switch (type) {
-    case 'record': return { ...baseField, recordName: baseField.name }
+    case 'record': return { ...baseField, recordName: baseField.name, default: '{}' }
     default: return baseField
   }
 }
@@ -34,24 +38,30 @@ const removeFieldChildren = (state, fieldId) => {
   return tempState
 }
 
-const changeName = (state, { fieldId, name }) => {
+const changeField = (state, fieldId, fieldName, value) => {
   const previousValue = state[fieldId]
-  const newValue = { ...previousValue, name }
+  const newValue = { ...previousValue, [fieldName]: value }
   return {
     ...state,
     [fieldId]: newValue
   }
 }
 
+const changeDefaultValue = (state, { fieldId, defaultValue }) => {
+  return changeField(state, fieldId, 'default', defaultValue)
+}
+
+const changeName = (state, { fieldId, name }) => {
+  return changeField(state, fieldId, 'name', name)
+}
+
 const changeType = (state, { fieldId, type }) => {
-  console.log('Changing type', type)
   const previousValue = state[fieldId]
   const newValue = buildTypeField(type, previousValue)
   let tempState = state
   if (previousValue.type === 'record' && newValue.type !== 'record') {
     tempState = removeFieldChildren(state, fieldId)
   }
-  console.log("Tempstate", tempState)
   return {
     ...tempState,
     [fieldId]: newValue
@@ -59,8 +69,8 @@ const changeType = (state, { fieldId, type }) => {
 }
 
 export const reducer = (state, action) => {
-  console.log("Reducer", action)
   switch (action.type) {
+    case CHANGE_DEFAULT_VALUE: return changeDefaultValue(state, action.payload)
     case CHANGE_NAME: return changeName(state, action.payload)
     case CHANGE_TYPE: return changeType(state, action.payload)
     default: return state
@@ -73,7 +83,7 @@ export const initialState = {
   3: { "id": 3, "parentId": 1, "name": "age", "type": "int", "default": -1 },
   4: { "id": 4, "parentId": 1, "name": "phone", "type": "string", "default": "NONE" },
   5: { "id": 5, "parentId": 1, "name": "housenum", "type": "string", "default": "NONE" },
-  6: { "id": 6, "parentId": 1, "name": "address", "default": {}, "type": "record", "recordName": "mailing_address" },
+  6: { "id": 6, "parentId": 1, "name": "address", "default": "{}", "type": "record", "recordName": "address" },
   7: { "id": 7, "parentId": 6, "name": "street", "type": "string", "default": "NONE" },
   8: { "id": 8, "parentId": 6, "name": "city", "type": "string", "default": "NONE" },
   9: { "id": 9, "parentId": 6, "name": "state_prov", "type": "string", "default": "NONE" },
