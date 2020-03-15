@@ -1,31 +1,16 @@
-import React from 'react';
-import Field from '../'
+import React from 'react'
 
-const RecordType = ({ type, fields = [] }) => {
-  let recordName = null
+import FieldList from 'components/FieldList'
 
-  if (typeof type === 'object') {
-    fields = type.fields || []
-    recordName = type.name
-    type = 'record'
-  }
-
+const RecordType = ({ id, recordName }) => {
   const recordNameComponent = recordName ? <React.Fragment>, "recordName": "{recordName}"</React.Fragment> : null
-
-  const fieldsComponent = fields.length === 0 ? <React.Fragment>&nbsp;</React.Fragment> : (
-    <React.Fragment>
-      , "fields": [
-        <ul>
-          { fields.map((field,index) => (<Field key={index} {...field} />)) }
-        </ul>
-      ]
-    </React.Fragment>
-  )
 
   return (
     <React.Fragment>
       {recordNameComponent}
-      {fieldsComponent}
+      , "fields": [
+        <FieldList parentId={id} />
+      ]
     </React.Fragment>
   )
 }

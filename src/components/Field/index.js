@@ -2,30 +2,19 @@ import React from 'react';
 
 import RecordField from './Record'
 
-const getType = (type) => {
-  if (typeof type === 'object') {
-    return [ "record", RecordField ]
-  }
+const Field = (props) => {
+  const { name, type, default: defaultValue } = props
 
-  switch (type) {
-    case 'record':
-      return [ "record", RecordField ]
-    default:
-      return [ "type", React.Fragment ]
-  }
-}
-
-const Field = (params) => {
-  const defaultComponent = params.default ? <React.Fragment>, "default": {JSON.stringify(params.default)}</React.Fragment> : null
-  const [type, TypeComponent] = getType(params.type)
+  const defaultComponent = defaultValue ? <React.Fragment>, "default": {JSON.stringify(defaultValue)}</React.Fragment> : null
+  const TypeComponent = type === 'record' ? RecordField : null
 
   return (
     <li>
       &#123;
-        "name": "{params.name}",
+        "name": "{name}",
         "type": "{type}"
         {defaultComponent}
-        <TypeComponent {...params} />
+        {TypeComponent ? <TypeComponent {...props} /> : null}
       &#125;
     </li>
   )
