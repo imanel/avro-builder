@@ -13,7 +13,7 @@ const FieldList = ({ parentId }) => {
     <ul>
       {fields.map(field => <Field {...field} key={field.id} />)}
       {!parentId ? null :
-        <li className={"plus"} onClick={() => addField(dispatch, parentId)}>&#43; add</li>
+        <li className={"add"} onClick={() => addField(dispatch, parentId)}>&#43; add</li>
       }
     </ul>
   )

@@ -3,6 +3,7 @@ import {
   CHANGE_DEFAULT_VALUE,
   CHANGE_NAME,
   CHANGE_TYPE,
+  REMOVE_FIELD,
 } from './types'
 
 export const addField = (dispatch, parentId, type = 'string') => dispatch({
@@ -34,5 +35,12 @@ export const changeType = (dispatch, fieldId, type) => dispatch({
   payload: {
     fieldId,
     type
+  }
+})
+
+export const removeField = (dispatch, fieldId) => dispatch({
+  type: REMOVE_FIELD,
+  payload: {
+    fieldId
   }
 })

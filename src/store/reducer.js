@@ -3,6 +3,7 @@ import {
   CHANGE_DEFAULT_VALUE,
   CHANGE_NAME,
   CHANGE_TYPE,
+  REMOVE_FIELD,
 } from './types'
 
 const uuidv4 = () => {
@@ -77,12 +78,19 @@ const changeType = (state, { fieldId, type }) => {
   }
 }
 
+const removeField = (state, { fieldId }) => {
+  const newState = { ...state }
+  delete newState[fieldId]
+  return newState
+}
+
 export const reducer = (state, action) => {
   switch (action.type) {
     case ADD_FIELD: return addField(state, action.payload)
     case CHANGE_DEFAULT_VALUE: return changeDefaultValue(state, action.payload)
     case CHANGE_NAME: return changeName(state, action.payload)
     case CHANGE_TYPE: return changeType(state, action.payload)
+    case REMOVE_FIELD: return removeField(state, action.payload)
     default: return state
   }
 }

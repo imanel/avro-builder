@@ -3,7 +3,12 @@ ul {
   padding-inline-start: 2em;
 }
 
-.plus {
+.add {
   color: blue;
+  cursor: pointer;
+}
+
+.remove {
+  color: red;
   cursor: pointer;
 }
