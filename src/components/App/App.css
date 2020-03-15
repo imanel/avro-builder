@@ -2,3 +2,8 @@ ul {
   list-style: none;
   padding-inline-start: 2em;
 }
+
+.plus {
+  color: blue;
+  cursor: pointer;
+}

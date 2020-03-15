@@ -1,4 +1,5 @@
 import {
+  ADD_FIELD,
   CHANGE_DEFAULT_VALUE,
   CHANGE_NAME,
   CHANGE_TYPE,
@@ -13,7 +14,7 @@ const uuidv4 = () => {
 
 const buildTypeField = (type, props) => {
   const baseField = {
-    id: props.id || uuidv4,
+    id: props.id || uuidv4(),
     parentId: props.parentId || null,
     type: type,
     name: props.name || 'name'
@@ -47,6 +48,14 @@ const changeField = (state, fieldId, fieldName, value) => {
   }
 }
 
+const addField = (state, props) => {
+  const newField = buildTypeField(props.type, props)
+  return {
+    ...state,
+    [newField.id]: newField
+  }
+}
+
 const changeDefaultValue = (state, { fieldId, defaultValue }) => {
   return changeField(state, fieldId, 'default', defaultValue)
 }
@@ -70,6 +79,7 @@ const changeType = (state, { fieldId, type }) => {
 
 export const reducer = (state, action) => {
   switch (action.type) {
+    case ADD_FIELD: return addField(state, action.payload)
     case CHANGE_DEFAULT_VALUE: return changeDefaultValue(state, action.payload)
     case CHANGE_NAME: return changeName(state, action.payload)
     case CHANGE_TYPE: return changeType(state, action.payload)
