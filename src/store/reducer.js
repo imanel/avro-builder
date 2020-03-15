@@ -2,6 +2,7 @@ import {
   ADD_FIELD,
   CHANGE_DEFAULT_VALUE,
   CHANGE_NAME,
+  CHANGE_NULLABLE,
   CHANGE_TYPE,
   REMOVE_FIELD,
 } from './types'
@@ -18,7 +19,8 @@ const buildTypeField = (type, props) => {
     id: props.id || uuidv4(),
     parentId: props.parentId || null,
     type: type,
-    name: props.name || 'name'
+    name: props.name || 'name',
+    nullable: props.nullable === undefined ? true : props.nullable
   }
 
   switch (type) {
@@ -65,6 +67,10 @@ const changeName = (state, { fieldId, name }) => {
   return changeField(state, fieldId, 'name', name)
 }
 
+const changeNullable = (state, { fieldId }) => {
+  return changeField(state, fieldId, 'nullable', !state[fieldId].nullable)
+}
+
 const changeType = (state, { fieldId, type }) => {
   const previousValue = state[fieldId]
   const newValue = buildTypeField(type, previousValue)
@@ -89,22 +95,27 @@ export const reducer = (state, action) => {
     case ADD_FIELD: return addField(state, action.payload)
     case CHANGE_DEFAULT_VALUE: return changeDefaultValue(state, action.payload)
     case CHANGE_NAME: return changeName(state, action.payload)
+    case CHANGE_NULLABLE: return changeNullable(state, action.payload)
     case CHANGE_TYPE: return changeType(state, action.payload)
     case REMOVE_FIELD: return removeField(state, action.payload)
     default: return state
   }
 }
 
-export const initialState = {
-  1: { "id": 1, "parentId": null, "type": "record", "name": "userInfo", "namespace": "my.example" },
-  2: { "id": 2, "parentId": 1, "name": "username", "type": "string", "default": "NONE" },
-  3: { "id": 3, "parentId": 1, "name": "age", "type": "int", "default": -1 },
-  4: { "id": 4, "parentId": 1, "name": "phone", "type": "string", "default": "NONE" },
-  5: { "id": 5, "parentId": 1, "name": "housenum", "type": "string", "default": "NONE" },
-  6: { "id": 6, "parentId": 1, "name": "address", "default": "{}", "type": "record", "recordName": "address" },
-  7: { "id": 7, "parentId": 6, "name": "street", "type": "string", "default": "NONE" },
-  8: { "id": 8, "parentId": 6, "name": "city", "type": "string", "default": "NONE" },
-  9: { "id": 9, "parentId": 6, "name": "state_prov", "type": "string", "default": "NONE" },
-  10: { "id": 10, "parentId": 6, "name": "country", "type": "string", "default": "NONE" },
-  11: { "id": 11, "parentId": 6, "name": "zip", "type": "string", "default": "NONE" }
-}
+// Starting value
+let initialState = {}
+let rootElement = buildTypeField('record', { name: 'userInfo' })
+initialState = addField(initialState, rootElement)
+initialState = addField(initialState, { parentId: rootElement.id, name: 'username', type: 'string', default: 'NONE' })
+initialState = addField(initialState, { parentId: rootElement.id, name: "age", type: "int", default: -1 })
+initialState = addField(initialState, { parentId: rootElement.id, name: "phone", type: "string", default: "NONE" })
+initialState = addField(initialState, { parentId: rootElement.id, name: "housenum", type: "string", default: "NONE" })
+let childElement = buildTypeField('record', { parentId: rootElement.id, name: "address", default: "{}", type: "record", recordName: "address" })
+initialState = addField(initialState, childElement)
+initialState = addField(initialState, { parentId: childElement.id, name: "street", type: "string", default: "NONE" })
+initialState = addField(initialState, { parentId: childElement.id, name: "city", type: "string", default: "NONE" })
+initialState = addField(initialState, { parentId: childElement.id, name: "state_prov", type: "string", default: "NONE" })
+initialState = addField(initialState, { parentId: childElement.id, name: "country", type: "string", default: "NONE" })
+initialState = addField(initialState, { parentId: childElement.id, name: "zip", type: "string", default: "NONE" })
+
+export { initialState }

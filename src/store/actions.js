@@ -2,6 +2,7 @@ import {
   ADD_FIELD,
   CHANGE_DEFAULT_VALUE,
   CHANGE_NAME,
+  CHANGE_NULLABLE,
   CHANGE_TYPE,
   REMOVE_FIELD,
 } from './types'
@@ -27,6 +28,13 @@ export const changeName = (dispatch, fieldId, name) => dispatch({
   payload: {
     fieldId,
     name
+  }
+})
+
+export const changeNullable = (dispatch, fieldId) => dispatch({
+  type: CHANGE_NULLABLE,
+  payload: {
+    fieldId
   }
 })
 
